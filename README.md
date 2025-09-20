@@ -134,14 +134,17 @@ DEBUG=false
 ### Production Deployment
 
 ```bash
-# Build and start production environment
-docker-compose --env-file .env.production -f docker-compose.prod.yml up -d
+# Simple production deployment
+./deploy-prod.sh start
 
 # With nginx reverse proxy
-docker-compose --env-file .env.production -f docker-compose.prod.yml --profile with-nginx up -d
+./deploy-prod.sh nginx
 
-# Check health
-curl http://localhost:3000/health
+# Manual deployment
+docker-compose --env-file .env.production -f docker-compose.prod.yml up -d
+
+# Check health (note: use proper User-Agent for Arcjet)
+curl -H "User-Agent: Mozilla/5.0" http://localhost:3000/
 ```
 
 ## 📁 Project Structure
@@ -163,6 +166,10 @@ acquisitions/
 ├── docker-compose.local.yml      # Development with local PostgreSQL
 ├── docker-compose.prod.yml       # Production deployment
 ├── docker-dev-improved.sh        # Development helper script
+├── start-dev.sh                  # Quick development start
+├── deploy-prod.sh                # Production deployment script
+├── nginx/                        # Nginx configuration for production
+│   └── nginx.conf               # Reverse proxy configuration
 ├── .env.development              # Development environment variables
 ├── .env.production               # Production environment variables
 └── drizzle.config.js            # Drizzle ORM configuration
@@ -336,10 +343,14 @@ ISC License - see LICENSE file for details.
 **Quick Commands Reference:**
 ```bash
 # Development
+./start-dev.sh                    # Quick start with local PostgreSQL
 ./docker-dev-improved.sh local    # Start with local PostgreSQL
 ./docker-dev-improved.sh neon     # Start with Neon Local  
 ./docker-dev-improved.sh stop     # Stop everything
 
 # Production  
-docker-compose -f docker-compose.prod.yml up -d
+./deploy-prod.sh start            # Start production (app only)
+./deploy-prod.sh nginx            # Start with Nginx reverse proxy
+./deploy-prod.sh logs             # View production logs
+./deploy-prod.sh stop             # Stop production environment
 ```

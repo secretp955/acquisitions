@@ -73,7 +73,7 @@ EXPOSE 3000
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   CMD node -e "const http = require('http'); \
-  const options = { host: 'localhost', port: process.env.PORT || 3000, path: '/health', timeout: 2000 }; \
+  const options = { host: 'localhost', port: process.env.PORT || 3000, path: '/', timeout: 2000, headers: { 'User-Agent': 'Docker-Health-Check/1.0' } }; \
   const req = http.request(options, (res) => { \
     process.exit(res.statusCode === 200 ? 0 : 1); \
   }); \
@@ -81,4 +81,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
   req.end();"
 
 # Command for production
-CMD ["node", "start"]
+CMD ["node", "src/index.js"]

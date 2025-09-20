@@ -49,6 +49,10 @@ Thumbs.db
 Dockerfile
 docker-compose*.yml
 .dockerignore
+*.sh
+
+# Nginx (not needed in app container)
+nginx/
 
 # Documentation
 README.md
