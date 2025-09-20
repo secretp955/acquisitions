@@ -51,6 +51,18 @@ export const updateUser = async (id, updates) => {
     // First check if user exists
     const existingUser = await getUserById(id);
 
+    // Check if email is being updated and if it already exists
+    if (updates.email && updates.email !== existingUser.email) {
+      const [emailExists] = await db
+        .select()
+        .from(users)
+        .where(eq(users.email, updates.email))
+        .limit(1);
+      if (emailExists) {
+        throw new Error('Email already exists');
+      }
+    }
+
     // Prepare update data with current timestamp
     const updateData = {
       ...updates,

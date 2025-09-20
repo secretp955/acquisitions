@@ -1,5 +1,3 @@
-import { response } from 'express';
-
 export const cookies = {
   getOptions: () => ({
     httpOnly: true,

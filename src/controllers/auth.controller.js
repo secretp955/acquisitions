@@ -2,7 +2,6 @@ import { formatValidationError } from '#utils/format.js';
 import logger from '#config/logger.js';
 import { signupSchema, signinSchema } from '#validations/auth.validation.js';
 import { createUser, authenticateUser } from '../services/auth.service.js';
-import jwt from 'jsonwebtoken';
 import { cookies } from '#utils/cookies.js';
 import { jwttoken } from '#utils/jwt.js';
 
