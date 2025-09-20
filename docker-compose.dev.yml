@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  # Neon Local proxy for development
+  neon-local:
+    image: neondatabase/neon_local:latest
+    container_name: acquisitions-neon-local
+    ports:
+      - '5432:5432'
+    env_file:
+      - .env.development
+    networks:
+      - acquisitions-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h localhost -p 5432"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Application service
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: development
+    container_name: acquisitions-app-dev
+    ports:
+      - '3000:3000'
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DATABASE_URL=postgresql://user:password@neon-local:5432/neondb
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+      - ARCJET_KEY=${ARCJET_KEY}
+    volumes:
+      # Mount source code for hot reload in development
+      - ./src:/app/src:ro
+      - ./package.json:/app/package.json:ro
+      # Node modules volume to avoid conflicts
+      - node_modules:/app/node_modules
+    depends_on:
+      neon-local:
+        condition: service_healthy
+    networks:
+      - acquisitions-network
+    develop:
+      # Enable hot reload for development
+      watch:
+        - action: sync
+          path: ./src
+          target: /app/src
+        - action: rebuild
+          path: ./package.json
+
+volumes:
+  node_modules:
+
+networks:
+  acquisitions-network:
+    driver: bridge
