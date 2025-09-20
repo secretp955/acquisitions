@@ -5,12 +5,14 @@ A Node.js Express application with Neon Database integration, fully dockerized f
 ## 🏗️ Architecture Overview
 
 ### Development Environment
+
 - **Option 1**: Neon Local proxy with ephemeral branches
 - **Option 2**: Local PostgreSQL container (fallback)
 - Hot reload enabled for development
 - Drizzle ORM with automatic migrations
 
 ### Production Environment
+
 - Direct connection to Neon Cloud Database
 - Optimized Docker images with multi-stage builds
 - Health checks and monitoring
@@ -19,6 +21,7 @@ A Node.js Express application with Neon Database integration, fully dockerized f
 ## 🚀 Quick Start
 
 ### Prerequisites
+
 - Docker & Docker Compose
 - Node.js 18+ (for local development)
 - Neon Database account (optional for local PostgreSQL)
@@ -37,6 +40,7 @@ cd acquisitions
 ### Option 2: Neon Local (Advanced)
 
 1. **Setup Neon credentials in `.env.development`:**
+
 ```bash
 # Get these from https://console.neon.tech/
 NEON_API_KEY=napi_your_api_key_here
@@ -45,6 +49,7 @@ PARENT_BRANCH_ID=your-main-branch-id
 ```
 
 2. **Test credentials and start:**
+
 ```bash
 # Test your Neon credentials
 ./docker-dev-improved.sh test-neon
@@ -235,6 +240,7 @@ psql -h localhost -U user -d neondb
 If Neon Local fails to start:
 
 1. **Check credentials:**
+
 ```bash
 ./docker-dev-improved.sh test-neon
 ```
@@ -245,6 +251,7 @@ If Neon Local fails to start:
    - Verify project ID format
 
 3. **Fallback to local PostgreSQL:**
+
 ```bash
 ./docker-dev-improved.sh local
 ```
@@ -252,6 +259,7 @@ If Neon Local fails to start:
 ### Common Issues
 
 **Port conflicts:**
+
 ```bash
 # Check what's using port 5432
 sudo lsof -i :5432
@@ -260,12 +268,14 @@ brew services stop postgresql
 ```
 
 **Permission issues:**
+
 ```bash
 # Ensure scripts are executable
 chmod +x docker-dev-improved.sh
 ```
 
 **Container health check failures:**
+
 ```bash
 # Check container logs
 ./docker-dev-improved.sh logs
@@ -292,13 +302,15 @@ docker-compose -f docker-compose.prod.yml --env-file .env.production up
 ### Environment Variable Checklist
 
 **Development:**
+
 - [ ] PORT
 - [ ] NODE_ENV=development
 - [ ] DATABASE_URL (local or Neon Local)
 - [ ] ARCJET_KEY
-- [ ] NEON_* credentials (if using Neon Local)
+- [ ] NEON\_\* credentials (if using Neon Local)
 
 **Production:**
+
 - [ ] PORT
 - [ ] NODE_ENV=production
 - [ ] DATABASE_URL (Neon Cloud)
@@ -307,12 +319,14 @@ docker-compose -f docker-compose.prod.yml --env-file .env.production up
 ## 📖 API Documentation
 
 ### Health Check
+
 ```bash
 GET /health
 # Returns: {"status": "OK", "timestamp": "...", "uptime": 123}
 ```
 
 ### Authentication Routes
+
 ```bash
 POST /api/auth/register
 POST /api/auth/login
@@ -341,14 +355,15 @@ ISC License - see LICENSE file for details.
 - **Drizzle ORM Docs**: https://orm.drizzle.team/
 
 **Quick Commands Reference:**
+
 ```bash
 # Development
 ./start-dev.sh                    # Quick start with local PostgreSQL
 ./docker-dev-improved.sh local    # Start with local PostgreSQL
-./docker-dev-improved.sh neon     # Start with Neon Local  
+./docker-dev-improved.sh neon     # Start with Neon Local
 ./docker-dev-improved.sh stop     # Stop everything
 
-# Production  
+# Production
 ./deploy-prod.sh start            # Start production (app only)
 ./deploy-prod.sh nginx            # Start with Nginx reverse proxy
 ./deploy-prod.sh logs             # View production logs

@@ -9,6 +9,7 @@ This is a Node.js Express API application with PostgreSQL database integration v
 ## Development Commands
 
 ### Quick Start
+
 ```bash
 # Start development environment (auto-detects best database option)
 ./docker-dev-improved.sh start
@@ -24,6 +25,7 @@ This is a Node.js Express API application with PostgreSQL database integration v
 ```
 
 ### Development Workflow
+
 ```bash
 # Start development server with hot reload
 npm run dev
@@ -40,6 +42,7 @@ npm start
 ```
 
 ### Database Operations
+
 ```bash
 # Generate Drizzle migrations
 npm run db:generate
@@ -55,6 +58,7 @@ npm run db:studio
 ```
 
 ### Code Quality
+
 ```bash
 # Linting
 npm run lint
@@ -66,6 +70,7 @@ npm run format:check
 ```
 
 ### Production Deployment
+
 ```bash
 # Deploy production environment
 ./deploy-prod.sh start
@@ -80,6 +85,7 @@ npm run format:check
 ## Architecture Overview
 
 ### Application Structure
+
 - **Express.js API** with modular architecture using ES modules
 - **Path Mapping**: Uses Node.js `imports` field for clean import paths (`#config/*`, `#controllers/*`, etc.)
 - **Security**: Integrated with Arcjet for rate limiting and bot protection
@@ -87,6 +93,7 @@ npm run format:check
 - **Authentication**: JWT-based auth with bcrypt password hashing
 
 ### Database Architecture
+
 - **ORM**: Drizzle ORM with PostgreSQL
 - **Multiple Environment Support**:
   - **Local PostgreSQL**: Full-featured local development
@@ -95,15 +102,17 @@ npm run format:check
 - **Migrations**: Schema versioning via Drizzle Kit
 
 ### Container Strategy
+
 - **Multi-stage Docker builds** for optimized production images
 - **Environment-specific compose files**:
   - `docker-compose.local.yml` - Local PostgreSQL development
-  - `docker-compose.dev.yml` - Neon Local development  
+  - `docker-compose.dev.yml` - Neon Local development
   - `docker-compose.prod.yml` - Production deployment
 - **Health checks** and monitoring built-in
 - **Optional Nginx** reverse proxy for production
 
 ### Directory Structure
+
 ```
 src/
 ├── config/          # Database, logging, Arcjet configuration
@@ -117,6 +126,7 @@ src/
 ```
 
 ### Security Implementation
+
 - **Arcjet Integration**: Rate limiting, bot detection, and security rules
 - **Helmet**: Security headers middleware
 - **CORS**: Cross-origin resource sharing configuration
@@ -128,6 +138,7 @@ src/
 ### Required Environment Variables
 
 **Development (.env.development)**:
+
 ```bash
 PORT=3000
 NODE_ENV=development
@@ -142,6 +153,7 @@ PARENT_BRANCH_ID=your_branch_id
 ```
 
 **Production (.env.production)**:
+
 ```bash
 PORT=3000
 NODE_ENV=production
@@ -153,7 +165,9 @@ LOG_LEVEL=warn
 ## Key Development Patterns
 
 ### Import Path Mapping
+
 Uses Node.js package imports for clean module resolution:
+
 ```javascript
 import logger from '#config/logger.js';
 import { createUser } from '#services/auth.service.js';
@@ -161,18 +175,21 @@ import { signupSchema } from '#validations/auth.validation.js';
 ```
 
 ### Error Handling Strategy
+
 - **Structured logging** with Winston for debugging
 - **Consistent error responses** from controllers
 - **Service layer separation** for business logic errors
 - **Database error handling** with appropriate HTTP status codes
 
 ### Database Development Workflow
+
 1. **Schema Changes**: Modify models in `src/models/`
 2. **Generate Migration**: `npm run db:generate`
 3. **Apply Migration**: `./docker-dev-improved.sh migrate` (dev) or manual in prod
 4. **Verify**: Use Drizzle Studio or direct database access
 
 ### Authentication Flow
+
 - **JWT tokens** stored in HTTP-only cookies
 - **Password hashing** with bcrypt
 - **User roles** supported in schema
@@ -181,22 +198,26 @@ import { signupSchema } from '#validations/auth.validation.js';
 ## Troubleshooting
 
 ### Common Issues
+
 - **Port conflicts**: Check if port 5432 (PostgreSQL) or 3000 (app) are in use
 - **Neon Local failures**: Verify credentials with `./docker-dev-improved.sh test-neon`
 - **Container health checks**: Use `./docker-dev-improved.sh logs` for debugging
 - **Database connection issues**: Check DATABASE_URL format and network connectivity
 
 ### Development vs Production Database
+
 - **Development**: Uses either local PostgreSQL or Neon Local with ephemeral branches
 - **Production**: Connects directly to Neon Cloud database
 - **Migrations**: Auto-applied in development, manual in production
 
 ### Security Notes
+
 - **Arcjet Configuration**: Requires valid API key for security features to work
 - **Bot Protection**: Curl requests will be blocked unless using proper User-Agent headers
 - **Rate Limiting**: Applied globally, be aware during testing
 
 ### Deployment Considerations
+
 - **Environment Variables**: Ensure all required vars are set for target environment
 - **Database URL**: Must point to correct database (local/Neon Local/Neon Cloud)
 - **Health Checks**: Use `/health` endpoint for monitoring
